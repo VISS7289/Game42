@@ -40,7 +40,7 @@ public:
 	USActionComponent();
 
 	UFUNCTION(BlueprintCallable, Category = "Action")
-	USActionComponent* GetActionComp(AActor* FromActor);
+	static USActionComponent* GetActionComp(AActor* FromActor);
 
 protected:
 

@@ -22,6 +22,7 @@ void USAction_ProjectileAttack::StartAction_Implementation(AActor* InstigatorAct
 
 		if (!WeaponComp)
 		{
+			WeaponComp = USWeaponComponent::GetWeaponComp(Character);
 			
 		}
 
@@ -44,7 +45,11 @@ void USAction_ProjectileAttack::StartAction_Implementation(AActor* InstigatorAct
 // 先用胶囊检测确定屏幕中间可接触到的第一个目标的位置，再从左手发射抛射物
 void USAction_ProjectileAttack::AttackDelay_Elapsed(ACharacter* InstigatorCharacter)
 {
-	if (ensureAlways(ProjectileBaseClass))
+	if (!ensure(WeaponComp)) return;
+
+	TSubclassOf<AActor> ProjectileBase = WeaponComp->Fire();
+
+	if (ProjectileBase)
 	{
 		// 左手位置
 		FVector HandLocation = InstigatorCharacter->GetMesh()->GetSocketLocation(HandSocketName);
@@ -79,7 +84,7 @@ void USAction_ProjectileAttack::AttackDelay_Elapsed(ACharacter* InstigatorCharac
 		SpawnParames.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		SpawnParames.Instigator = InstigatorCharacter;
 		// 生成抛射物
-		GetWorld()->SpawnActor<AActor>(ProjectileBaseClass, SpawnTM, SpawnParames);
+		GetWorld()->SpawnActor<AActor>(ProjectileBase, SpawnTM, SpawnParames);
 	}
 
 	StopAction(InstigatorCharacter);

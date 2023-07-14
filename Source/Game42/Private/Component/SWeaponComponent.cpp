@@ -16,12 +16,22 @@ USWeaponComponent::USWeaponComponent()
 	WeaponMesh->SetSimulatePhysics(true);
 	// 默认7发子弹
 	BulletNumMax = 7;
+	
 
+}
+
+// Called when the game starts
+void USWeaponComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// 默认装满
+	AddAll();
 
 }
 
 // 开火
-TSubclassOf<ASProjectileBase> USWeaponComponent::Fire()
+TSubclassOf<AActor> USWeaponComponent::Fire()
 {
 	// 保证有子弹
 	if (BulletInGun.Num() <= 0)
@@ -30,10 +40,11 @@ TSubclassOf<ASProjectileBase> USWeaponComponent::Fire()
 	}
 
 	return BulletInGun.Pop();
+	//return BulletInGun[0];
 }
 
 // 装弹
-void USWeaponComponent::AddBullet(TSubclassOf<ASProjectileBase> ProjectileClass)
+void USWeaponComponent::AddBullet(TSubclassOf<AActor> ProjectileClass)
 {
 	// 不能超上限；
 	if (BulletInGun.Num() >= BulletNumMax)
@@ -64,19 +75,18 @@ void USWeaponComponent::AddAll()
 
 	if (ensure(DefaultBullet))
 	{
-		BulletInGun.Append(&DefaultBullet, delta);
+		//BulletInGun.Add(DefaultBullet);
+
+		for (int i = 0; i < delta; i++)
+		{
+			BulletInGun.Add(DefaultBullet);
+		}
+
 	}
 }
 
 
-// Called when the game starts
-void USWeaponComponent::BeginPlay()
-{
-	Super::BeginPlay();
 
-	// ...
-
-}
 
 
 // Called every frame

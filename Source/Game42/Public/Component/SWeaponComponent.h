@@ -7,7 +7,6 @@
 #include "SWeaponComponent.generated.h"
 
 class UStaticMeshComponent; // 静态网格体
-class ASProjectileBase; // 子弹基类
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class GAME42_API USWeaponComponent : public UActorComponent
@@ -19,7 +18,10 @@ public:
 	USWeaponComponent();
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	USWeaponComponent* GetWeaponComp(AActor* FromActor);
+	static USWeaponComponent* GetWeaponComp(AActor* FromActor);
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	TSubclassOf<AActor> Fire(); // 开火
 
 protected:
 
@@ -27,19 +29,16 @@ protected:
 	UStaticMeshComponent* WeaponMesh; // 枪械网格体
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
-	TSubclassOf<ASProjectileBase> DefaultBullet; // 默认子弹
+	TSubclassOf<AActor> DefaultBullet; // 默认子弹
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 	int32 BulletNumMax; // 子弹上限
 
 	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
-	TArray<TSubclassOf<ASProjectileBase>> BulletInGun; // 枪械中现存子弹
+	TArray<TSubclassOf<AActor>> BulletInGun; // 枪械中现存子弹
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	TSubclassOf<ASProjectileBase> Fire(); // 开火
-
-	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	void AddBullet(TSubclassOf<ASProjectileBase> ProjectileClass); // 装弹
+	void AddBullet(TSubclassOf<AActor> ProjectileClass); // 装弹
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void AddAll(); // 装满
